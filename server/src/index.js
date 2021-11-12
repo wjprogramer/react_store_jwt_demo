@@ -10,6 +10,10 @@ app.use(cors());
 const jwtSecret = 'secret123';
 
 app.get('/jwt', (req, res) => {
+  const token = jsonwebtoken.sign({ user: 'johndoe' }, jwtSecret);
+
+  res.cookie('token', token, { httpOnly: true });
+  
   res.json({
     token: jsonwebtoken.sign({ user: 'johndoe' }, jwtSecret)
   });  
