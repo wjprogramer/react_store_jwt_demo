@@ -6,6 +6,7 @@ function App() {
   const storedJwt = localStorage.getItem('token');
   const [jwt, setJwt] = useState(storedJwt || null);
   const [foods, setFoods] = useState([]);
+  const [newFoodMessage, setNewFoodMessage] = useState(null);
   const [fetchError, setFetchError] = useState(null);
   
   const getJwt = async () => {
@@ -17,6 +18,16 @@ function App() {
     try {
       const { data } = await axios.get(`/foods`);
       setFoods(data);
+      setFetchError(null);
+    } catch (err) {
+      setFetchError(err.message);
+    }
+  };
+
+  const createFood = async () => {
+    try {
+      const { data } = await axios.post('/foods');
+      setNewFoodMessage(data.message);
       setFetchError(null);
     } catch (err) {
       setFetchError(err.message);
@@ -45,6 +56,12 @@ function App() {
         {fetchError && (
           <p style={{ color: 'red' }}>{fetchError}</p>
         )}
+      </section>
+      <section>
+        <button onClick={() => createFood()}>
+          Create New Food
+        </button>
+        {newFoodMessage && <p>{newFoodMessage}</p>}
       </section>
     </>
   );
