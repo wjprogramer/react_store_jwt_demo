@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
 
@@ -8,6 +8,15 @@ function App() {
   const [foods, setFoods] = useState([]);
   const [newFoodMessage, setNewFoodMessage] = useState(null);
   const [fetchError, setFetchError] = useState(null);
+
+  useEffect(() => {
+    const getCsrfToken = async () => {
+      const { data } = await axios.get('/csrf-token');
+      axios.defaults.headers.post['X-CSRF-Token'] = data.csrfToken;
+    };
+    
+    getCsrfToken();
+  }, []);
   
   const getJwt = async () => {
     const { data } = await axios.get(`/jwt`);
